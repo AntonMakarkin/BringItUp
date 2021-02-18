@@ -1,8 +1,8 @@
 import Slider from './slider';
 
 export default class MainSlider extends Slider {
-    constructor(page, btns) {
-        super(page, btns);
+    constructor(btns) {
+        super(btns);
     }
 
     showSlides(n) {
@@ -26,9 +26,7 @@ export default class MainSlider extends Slider {
             } else {
                 this.hanson.classList.remove('slideInUp');
             }
-        } catch(e) {
-
-        }
+        } catch(e) {}
 
         this.slides.forEach(slide => {
             slide.style.display = 'none';
