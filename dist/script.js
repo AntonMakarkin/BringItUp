@@ -5028,6 +5028,13 @@ window.addEventListener('DOMContentLoaded', function () {
     container: '.page'
   });
   slider.render();
+  var modulePageSlider = new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    container: '.moduleapp',
+    btns: '.next',
+    prev: '.prevmodule',
+    next: '.nextmodule'
+  });
+  modulePageSlider.render();
   var showUpSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_1__["default"]({
     container: '.showup__content-slider',
     prev: '.showup__prev',
@@ -5047,8 +5054,8 @@ window.addEventListener('DOMContentLoaded', function () {
   modulesSlider.init();
   var feedSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_1__["default"]({
     container: '.feed__slider',
-    prev: '.feed__slider .slick-prev',
-    next: '.feed__slider .slick-next',
+    prev: '.slick-prev-button',
+    next: null,
     activeClass: 'feed__item-active'
   });
   feedSlider.init();
@@ -5086,13 +5093,14 @@ function () {
   function Difference(oldOfficer, newOfficer, items) {
     _classCallCheck(this, Difference);
 
-    this.oldOfficer = document.querySelector(oldOfficer);
-    this.newOfficer = document.querySelector(newOfficer);
-    this.oldItems = this.oldOfficer.querySelectorAll(items);
-    this.newItems = this.newOfficer.querySelectorAll(items);
-    this.items = items;
-    this.oldCounter = 0;
-    this.newCounter = 0;
+    try {
+      this.oldOfficer = document.querySelector(oldOfficer);
+      this.newOfficer = document.querySelector(newOfficer);
+      this.oldItems = this.oldOfficer.querySelectorAll(items);
+      this.newItems = this.newOfficer.querySelectorAll(items);
+      this.oldCounter = 0;
+      this.newCounter = 0;
+    } catch (e) {}
   }
 
   _createClass(Difference, [{
@@ -5121,10 +5129,12 @@ function () {
   }, {
     key: "init",
     value: function init() {
-      this.hideItems(this.oldItems);
-      this.hideItems(this.newItems);
-      this.bindTriggers(this.oldOfficer, this.oldItems, this.oldCounter);
-      this.bindTriggers(this.newOfficer, this.newItems, this.newCounter);
+      try {
+        this.hideItems(this.oldItems);
+        this.hideItems(this.newItems);
+        this.bindTriggers(this.oldOfficer, this.oldItems, this.oldCounter);
+        this.bindTriggers(this.newOfficer, this.newItems, this.newCounter);
+      } catch (e) {}
     }
   }]);
 
@@ -5525,7 +5535,7 @@ function (_Slider) {
       } catch (e) {}
 
       this.slides.forEach(function (slide) {
-        slide.style.display = 'none';
+        slide.style.display = 'none'; //slide.classList.add('animated', 'fadeIn');
       });
       this.slides[this.slideIndex - 1].style.display = 'block';
     }
@@ -5535,13 +5545,9 @@ function (_Slider) {
       this.showSlides(this.slideIndex += n);
     }
   }, {
-    key: "render",
-    value: function render() {
+    key: "bindTriggers",
+    value: function bindTriggers() {
       var _this2 = this;
-
-      try {
-        this.hanson = document.querySelector('.hanson'); //block with your teacher on the third slide
-      } catch (e) {}
 
       this.btns.forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -5554,7 +5560,45 @@ function (_Slider) {
           _this2.showSlides(_this2.slideIndex);
         });
       });
-      this.showSlides(this.slideIndex);
+      document.querySelectorAll('.prevmodule').forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          _this2.plusSlides(-1);
+        });
+      });
+      document.querySelectorAll('.nextmodule').forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          _this2.plusSlides(1);
+        });
+      });
+      /*this.prev.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          this.plusSlides(-1);
+      });
+        this.next.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              this.plusSlides(1);
+      });*/
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.container) {
+        //if container with that selector exists
+        try {
+          this.hanson = document.querySelector('.hanson'); //block with your teacher on the third slide
+        } catch (e) {}
+
+        this.showSlides(this.slideIndex);
+        this.bindTriggers();
+      }
     }
   }]);
 
@@ -5650,11 +5694,8 @@ function (_Slider) {
       });
 
       if (!this.slides[0].closest('button')) {
-        //if the first slide is not a button
         this.slides[0].classList.add(this.activeClass);
       }
-
-      this.slides[0].classList.add(this.activeClass);
 
       if (this.animate) {
         this.slides[0].querySelector('.card__title').style.opacity = '1';
@@ -5665,20 +5706,21 @@ function (_Slider) {
     key: "nextSlide",
     value: function nextSlide() {
       if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
-        this.container.appendChild(this.slides[0]); //slide
+        this.container.appendChild(this.slides[0]); // Slide
 
-        this.container.appendChild(this.slides[1]); //btn prev
+        this.container.appendChild(this.slides[1]); // Btn
 
-        this.container.appendChild(this.slides[2]); //btn next
+        this.container.appendChild(this.slides[2]); // Btn
 
         this.decorizeSlides();
       } else if (this.slides[1].tagName == "BUTTON") {
-        this.container.appendChild(this.slides[0]); //slide
+        this.container.appendChild(this.slides[0]); // Slide
 
-        this.container.appendChild(this.slides[1]); //btn prev
+        this.container.appendChild(this.slides[1]); // Btn
+
+        this.decorizeSlides();
       } else {
-        this.container.appendChild(this.slides[0]); //add the current slide in the end of the slider
-
+        this.container.appendChild(this.slides[0]);
         this.decorizeSlides();
       }
     }
@@ -5687,29 +5729,24 @@ function (_Slider) {
     value: function bindTriggers() {
       var _this2 = this;
 
-      this.next.addEventListener('click', function () {
-        return _this2.nextSlide();
-      });
+      if (this.next != null) {
+        this.next.addEventListener('click', function () {
+          return _this2.nextSlide();
+        });
+      }
+
       this.prev.addEventListener('click', function () {
         for (var i = _this2.slides.length - 1; i > 0; i--) {
-          //from the end
           if (_this2.slides[i].tagName !== "BUTTON") {
-            var _active = _this2.slides[i];
+            var active = _this2.slides[i];
 
-            _this2.container.insertBefore(_active, _this2.slides[0]);
+            _this2.container.insertBefore(active, _this2.slides[0]);
 
             _this2.decorizeSlides();
 
             break;
           }
         }
-
-        var active = _this2.slides[_this2.slides.length - 1]; //the last slide in the slider
-
-        _this2.container.insertBefore(active, _this2.slides[0]); //add the last slider in the beginning
-
-
-        _this2.decorizeSlides();
       });
     }
   }, {
@@ -5717,14 +5754,18 @@ function (_Slider) {
     value: function init() {
       var _this3 = this;
 
-      this.container.style.cssText = "\n            display: flex;\n            flex-wrap: wrap;\n            overflow: hidden;\n            align-items: flex-start;\n        ";
-      this.bindTriggers();
-      this.decorizeSlides();
+      try {
+        this.container.style.cssText = "\n            display: flex;\n            flex-wrap: wrap;\n            overflow: hidden;\n            align-items: flex-start;\n            ";
+        this.bindTriggers();
+        this.decorizeSlides();
 
-      if (this.autoplay) {
-        setInterval(function () {
-          return _this3.nextSlide();
-        }, 5000);
+        if (this.autoplay) {
+          setInterval(function () {
+            return _this3.nextSlide();
+          }, 5000);
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
   }]);
@@ -5766,7 +5807,11 @@ var Slider = function Slider() {
   _classCallCheck(this, Slider);
 
   this.container = document.querySelector(container);
-  this.slides = this.container.children;
+
+  try {
+    this.slides = this.container.children;
+  } catch (e) {}
+
   this.btns = document.querySelectorAll(btns);
   this.prev = document.querySelector(prev);
   this.next = document.querySelector(next);

@@ -24,12 +24,13 @@ export default class MainSlider extends Slider {
                     this.hanson.classList.add('slideInUp');
                 }, 3000);
             } else {
-                this.hanson.classList.remove('slideInUp');
+                this.hanson.classList.remove('slideInUp', );
             }
         } catch(e) {}
 
         this.slides.forEach(slide => {
             slide.style.display = 'none';
+            //slide.classList.add('animated', 'fadeIn');
         });
 
         this.slides[this.slideIndex - 1].style.display = 'block';
@@ -39,11 +40,7 @@ export default class MainSlider extends Slider {
         this.showSlides(this.slideIndex += n);
     }
 
-    render() {
-        try {
-            this.hanson = document.querySelector('.hanson'); //block with your teacher on the third slide
-        } catch(e) {}
-        
+    bindTriggers() {
         this.btns.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.plusSlides(1);
@@ -56,6 +53,42 @@ export default class MainSlider extends Slider {
             });
         });
 
-        this.showSlides(this.slideIndex);
+        document.querySelectorAll('.prevmodule').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.plusSlides(-1);
+            });
+        });
+
+        document.querySelectorAll('.nextmodule').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.plusSlides(1);
+            });
+        });
+        /*this.prev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.plusSlides(-1);
+        });
+
+        this.next.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.plusSlides(1);
+        });*/
+    }
+
+    render() {
+        if (this.container) { //if container with that selector exists
+            try {
+                this.hanson = document.querySelector('.hanson'); //block with your teacher on the third slide
+            } catch(e) {}
+    
+            this.showSlides(this.slideIndex);
+            this.bindTriggers();
+        } 
     }
 }

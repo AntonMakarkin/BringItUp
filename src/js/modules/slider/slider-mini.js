@@ -14,11 +14,9 @@ export default class MiniSlider extends Slider {
             }
         });
 
-        if (!this.slides[0].closest('button')) { //if the first slide is not a button
+        if (!this.slides[0].closest('button')) {
             this.slides[0].classList.add(this.activeClass);
         }
-
-        this.slides[0].classList.add(this.activeClass);
         
         if (this.animate) {
             this.slides[0].querySelector('.card__title').style.opacity = '1';
@@ -28,25 +26,28 @@ export default class MiniSlider extends Slider {
 
     nextSlide() {
         if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
-            this.container.appendChild(this.slides[0]); //slide
-            this.container.appendChild(this.slides[1]); //btn prev
-            this.container.appendChild(this.slides[2]); //btn next
+            this.container.appendChild(this.slides[0]); // Slide
+            this.container.appendChild(this.slides[1]); // Btn
+            this.container.appendChild(this.slides[2]); // Btn
             this.decorizeSlides();
-        } else if (this.slides[1].tagName == "BUTTON") {
-            this.container.appendChild(this.slides[0]); //slide
-            this.container.appendChild(this.slides[1]); //btn prev
+        } else if (this.slides[1].tagName == "BUTTON"){
+            this.container.appendChild(this.slides[0]); // Slide
+            this.container.appendChild(this.slides[1]); // Btn
+            this.decorizeSlides();
         } else {
-            this.container.appendChild(this.slides[0]); //add the current slide in the end of the slider
+            this.container.appendChild(this.slides[0]);
             this.decorizeSlides();
         }
     }
 
     bindTriggers() {
-        this.next.addEventListener('click', () => this.nextSlide());
+        if (this.next != null) {
+            this.next.addEventListener('click', () => this.nextSlide());
+        }
 
         this.prev.addEventListener('click', () => {
 
-            for (let i = this.slides.length - 1; i > 0; i--) { //from the end
+            for (let i = this.slides.length - 1; i > 0; i--) {
                 if (this.slides[i].tagName !== "BUTTON") {
                     let active = this.slides[i];
                     this.container.insertBefore(active, this.slides[0]);
@@ -55,25 +56,25 @@ export default class MiniSlider extends Slider {
                 }
             }
 
-            let active = this.slides[this.slides.length - 1]; //the last slide in the slider
-            this.container.insertBefore(active, this.slides[0]); //add the last slider in the beginning
-            this.decorizeSlides();
+           
         });
     }
 
     init() {
-        this.container.style.cssText = `
+        try {
+            this.container.style.cssText = `
             display: flex;
             flex-wrap: wrap;
             overflow: hidden;
             align-items: flex-start;
-        `;
+            `;
 
-        this.bindTriggers();
-        this.decorizeSlides();
+            this.bindTriggers();
+            this.decorizeSlides();
 
-        if (this.autoplay) {
-            setInterval(() => this.nextSlide(), 5000);           
-        }
+            if (this.autoplay) {
+                setInterval(() => this.nextSlide(), 5000);
+            }
+        } catch(e){console.log(e);}
     }
 }

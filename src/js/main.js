@@ -8,6 +8,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const slider = new MainSlider({btns: '.next', container: '.page'});
     slider.render();
 
+    const modulePageSlider = new MainSlider({container: '.moduleapp', btns: '.next', prev: '.prevmodule', next: '.nextmodule'});
+    modulePageSlider.render();
+
     const showUpSlider = new MiniSlider({
         container: '.showup__content-slider',
         prev: '.showup__prev',
@@ -29,8 +32,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const feedSlider = new MiniSlider({
         container: '.feed__slider',
-        prev: '.feed__slider .slick-prev',
-        next: '.feed__slider .slick-next',
+        prev: '.slick-prev-button',
+        next: null,
         activeClass: 'feed__item-active'
     });
     feedSlider.init();
